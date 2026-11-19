@@ -33,6 +33,8 @@ pip install -r movie_genre_classifier/requirements.txt
 
 ### 2. Run the Web Application
 ```bash
+python run.py
+# or
 python movie_genre_classifier/app.py
 ```
 Open your browser and navigate to `http://127.0.0.1:5000`.

@@ -15,8 +15,13 @@ Only the first genre of each movie is used, because this model predicts one labe
 import argparse
 import json
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
+
+BASE = Path(__file__).resolve().parent
+if str(BASE) not in sys.path:
+    sys.path.insert(0, str(BASE))
 
 import joblib
 import pandas as pd
@@ -26,7 +31,12 @@ from sklearn.model_selection import cross_val_score, train_test_split
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 
-from preprocess import clean_text
+try:
+    from preprocess import clean_text
+except ImportError:
+    from movie_genre_classifier.preprocess import clean_text
+    import movie_genre_classifier.preprocess as preprocess
+    sys.modules["preprocess"] = preprocess
 
 BASE = Path(__file__).parent
 GENRE_ALIASES = {"romantic": "romance", "romantic comedy": "romance", "horror/thriller": "horror"}

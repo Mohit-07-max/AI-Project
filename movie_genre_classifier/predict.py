@@ -5,11 +5,20 @@
 """
 
 import argparse
+import sys
 from pathlib import Path
 
 import joblib
 
-import preprocess  # noqa: F401  (the saved model needs this module to be importable)
+PACKAGE_DIR = Path(__file__).resolve().parent
+if str(PACKAGE_DIR) not in sys.path:
+    sys.path.insert(0, str(PACKAGE_DIR))
+
+try:
+    import preprocess  # noqa: F401  (the saved model needs this module to be importable)
+except ImportError:
+    from movie_genre_classifier import preprocess  # noqa: F401
+    sys.modules["preprocess"] = preprocess
 
 MODEL_PATH = Path(__file__).parent / "models" / "genre_model.joblib"
 

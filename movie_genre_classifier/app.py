@@ -4,9 +4,20 @@
 JSON API:  POST /api/predict   {"plot": "...", "keywords": "..."}
 """
 
+import sys
+from pathlib import Path
+
+# Ensure package directory is on sys.path for direct imports and joblib unpickling
+PACKAGE_DIR = Path(__file__).resolve().parent
+if str(PACKAGE_DIR) not in sys.path:
+    sys.path.insert(0, str(PACKAGE_DIR))
+
 from flask import Flask, jsonify, render_template_string, request
 
-from predict import load_model, predict_genres
+try:
+    from predict import load_model, predict_genres
+except ImportError:
+    from movie_genre_classifier.predict import load_model, predict_genres
 
 app = Flask(__name__)
 MAX_CHARS = 5000
@@ -14,7 +25,7 @@ MAX_CHARS = 5000
 try:
     MODEL = load_model()
     MODEL_ERROR = None
-except FileNotFoundError as error:
+except Exception as error:
     MODEL, MODEL_ERROR = None, str(error)
 
 PAGE = """<!doctype html>
